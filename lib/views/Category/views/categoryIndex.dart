@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:markit/models/categoryTab.dart';
-
+import 'package:markit/views/Category/bloc/category_bloc.dart';
+import 'package:markit/views/Category/model/categoryChild.dart';
+import 'package:markit/views/Category/views/category_child.dart';
 import '../repository/categoryRepository.dart';
+import 'Multibloc.dart';
 
 class Index extends StatefulWidget {
   const Index({Key? key}) : super(key: key);
@@ -11,40 +15,105 @@ class Index extends StatefulWidget {
   State<Index> createState() => _IndexState();
 }
 
-class _IndexState extends State<Index> {
+class _IndexState extends State<Index>with TickerProviderStateMixin {
+  CategoryBloc categoryBloc=CategoryBloc();
+  CategoryBloc categoryBloc2=CategoryBloc();
+  CategoryTabLoadingState Data= CategoryTabLoadingState();
   CategoryRepository repository= CategoryRepository();
+  CategoryChild? categoryChild;
+  int selectIndex=1;
   String? tabId="2";
+
+  late TabController _tabController;
+  @override
+  void initState() {
+    categoryBloc.add(CategoryInitialFetchEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: repository.getCategoryTabs(),
-        builder: (context,snapshot){
-          if(snapshot.hasData){
-             List<CategoryTab>? list= snapshot.data;
-            return Row(
-              children :[ 
-                Expanded(
-                  flex: 1,
-                  child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: snapshot.data?.length,
-                  itemBuilder:(context,index){
-                    tabId=list![index].id;
-                    String? name=list?[index].name;
-                    return Container(child: Padding(padding: EdgeInsets.all(10), child: Text(name!),),);
-                  } ,
-              ),),
-                
-              ]
-            );
-          }
-          else if (snapshot.hasError){
-            return Container(child: Text(snapshot.error.toString()),);
-          }
-          else {
-            return CircularProgressIndicator();
+
+    return BlocProvider<CategoryBloc>(
+        create: (context)=>categoryBloc,
+        child:CategoryTabs()
+    );
+
+  }
+}
+
+
+class CategoryTabs extends StatefulWidget {
+  const CategoryTabs({Key? key}) : super(key: key);
+
+  @override
+  State<CategoryTabs> createState() => _CategoryTabsState();
+}
+
+class _CategoryTabsState extends State<CategoryTabs> with TickerProviderStateMixin {
+  CategoryTabLoadingState Data= CategoryTabLoadingState();
+  CategoryRepository repository= CategoryRepository();
+  CategoryChild? categoryChild;
+  int selectIndex=1;
+  String? tabId="2";
+  late TabController _tabController;
+  @override
+  Widget build(BuildContext context) {
+    final CategoryBloc categoryBloc=BlocProvider.of<CategoryBloc>(context);
+    return  BlocBuilder<CategoryBloc,CategoryState>(
+      buildWhen: (s1,s2){
+        if(s2.runtimeType==CategoryTabLoadingState){
+          return true;
+        }
+        else
+          return false;
+      },
+        bloc:categoryBloc ,
+        builder: (context,state){
+          switch(state.runtimeType) {
+            case ( CategoryTabLoadingState ):{
+
+              Data = state as CategoryTabLoadingState;
+              _tabController=TabController(length: Data.listTab!.length,initialIndex: 0, vsync: this);
+              return DefaultTabController(
+                length: Data.listTab!.length,
+                child: Column(
+                  children: [
+                    Container(
+                      child: TabBar(
+                          onTap: (i){
+                            _tabController.index=i;
+                            categoryBloc.add(CategoryChildrenFetchEvent(Data.listTab?[i].id));
+                            setState(() {
+
+                            });
+                          },
+                          tabs: Data.listTab!
+                              .map((e) =>Text(e.name!,overflow:TextOverflow.ellipsis ,))
+                              .toList()),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children:Data.listTab!
+                            .map((e) =>Container(child: CategoryNav(cruntTab:tabId ,)))
+                            .toList() ,
+                      ),
+                    ),
+
+                  ],
+                ),
+
+              );
+
+            }break;
+            default:{
+              return CircularProgressIndicator(color: Colors.cyan,);
+            }
+
           }
 
-        });
+        }
+    );
   }
 }

@@ -113,11 +113,12 @@ class Child {
   String? id;
   String? type;
   String? navNodeId;
-  List<Child>? child;
+  List<ChildChild>? child;
   String? leftThumb;
   String? relativeUrl;
   String? hrefTarget;
   String? hrefType;
+
 
   Child(
       {this.name,
@@ -129,7 +130,9 @@ class Child {
         this.leftThumb,
         this.relativeUrl,
         this.hrefTarget,
-        this.hrefType});
+        this.hrefType
+
+      });
 
   Child.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -138,15 +141,17 @@ class Child {
     type = json['type'];
     navNodeId = json['navNodeId'];
     if (json['child'] != null) {
-      child = <Child>[];
+      child = <ChildChild>[];
       json['child'].forEach((v) {
-        child!.add(new Child.fromJson(v));
+        child!.add(new ChildChild.fromJson(v));
       });
     }
     leftThumb = json['leftThumb'];
     relativeUrl = json['relativeUrl'];
     hrefTarget = json['hrefTarget'];
     hrefType = json['hrefType'];
+
+
   }
 
   Map<String, dynamic> toJson() {
@@ -156,9 +161,9 @@ class Child {
     data['id'] = this.id;
     data['type'] = this.type;
     data['navNodeId'] = this.navNodeId;
-    if (this.child != null) {
-      data['child'] = this.child!.map((v) => v.toJson()).toList();
-    }
+    // if (this.child != null) {
+    //   data['child'] = this.child!.map((v) => v.toJson()).toList();
+    // }
     data['leftThumb'] = this.leftThumb;
     data['relativeUrl'] = this.relativeUrl;
     data['hrefTarget'] = this.hrefTarget;
@@ -166,7 +171,112 @@ class Child {
     return data;
   }
 }
+class ChildChild {
+  int? commonTreeId;
+  String type;
+  String? hrefTarget;
+  //ChildHrefType? hrefType;
+  String id;
+  int? commonType;
+  String? relativeUrl;
+  int? commonNodeId;
+  String? name;
+  Style style;
+  int? commonNodeLevel;
+  int? commonNodePid;
+  bool? isAutoRec;
+  String navNodeId;
+  List<CategoryThumb>? thumb;
+  String? parentName;
+  int? secondTitleId;
+  String? transToNormal;
+  String? enName;
+  //Color? color;
+  bool? isNotIn;
 
+  ChildChild({
+    this.commonTreeId,
+    required this.type,
+    this.hrefTarget,
+   // this.hrefType,
+    required this.id,
+    this.commonType,
+    this.relativeUrl,
+    this.commonNodeId,
+    this.name,
+    required this.style,
+    this.commonNodeLevel,
+    this.commonNodePid,
+    required this.isAutoRec,
+    required this.navNodeId,
+    this.thumb,
+    this.parentName,
+    this.secondTitleId,
+    this.transToNormal,
+    this.enName,
+    //this.color,
+    this.isNotIn,
+  });
+
+  factory ChildChild.fromJson(Map<String, dynamic> json){
+
+    return ChildChild(
+
+      commonTreeId: json["commonTreeId"],
+      type: json["type"],
+      hrefTarget: json["hrefTarget"],
+      //hrefType: childHrefTypeValues.map[json["hrefType"]]!,
+      id: json["id"],
+      commonType: json["commonType"],
+      relativeUrl: json["relativeUrl"],
+      commonNodeId: json["commonNodeId"],
+      name: json["name"],
+      style: Style.fromJson(json["style"]),
+      commonNodeLevel: json["commonNodeLevel"],
+      commonNodePid: json["commonNodePid"],
+      isAutoRec: json["isAutoRec"],
+      navNodeId: json["navNodeId"],
+      thumb: json["thumb"] == null ? [] : List<CategoryThumb>.from(
+          json["thumb"]!.map((x) => CategoryThumb.fromJson(x))),
+      parentName: json["parentName"],
+      secondTitleId: json["secondTitleId"],
+      transToNormal: json["transToNormal"],
+      enName: json["enName"],
+      //color: colorValues.map[json["color"]]!,
+      isNotIn: json["isNotIn"],
+
+    );
+  }
+
+
+
+
+
+
+  Map<String, dynamic> toJson() => {
+    "commonTreeId": commonTreeId,
+    "type": type,
+    "hrefTarget": hrefTarget,
+    //"hrefType": childHrefTypeValues.reverse[hrefType],
+    "id": id,
+    "commonType": commonType,
+    "relativeUrl": relativeUrl,
+    "commonNodeId": commonNodeId,
+    "name": name,
+    "style": style.toJson(),
+    "commonNodeLevel": commonNodeLevel,
+    "commonNodePid": commonNodePid,
+    "isAutoRec": isAutoRec,
+    "navNodeId": navNodeId,
+   // "thumb": thumb == null ? [] : List<dynamic>.from(thumb!.map((x) => x.toJson())),
+    "parentName": parentName,
+    "secondTitleId": secondTitleId,
+    "transToNormal": transToNormal,
+    "enName": enName,
+    //"color": colorValues.reverse[color],
+    "isNotIn": isNotIn,
+  };
+}
 
 
 class Style {
@@ -191,8 +301,8 @@ class Style {
   }
 }
 
-class Thumb {
-  int? imgId;
+class CategoryThumb {
+ // String? imgId;
   String? tagId;
   String? goodsId;
   String? enName;
@@ -202,7 +312,7 @@ class Thumb {
   String? sku;
   String? height;
   String? alt;
-  int? index;
+  String? index;
   String? relativeUrl;
   String? target;
   String? width;
@@ -211,17 +321,17 @@ class Thumb {
   bool? recommendCate;
   bool? isNotIn;
   String? adp;
-  int? firstLevelCompId;
+  String? firstLevelCompId;
   String? cornerMarkImgSrc;
   String? notInHrefMsg;
   String? name;
   String? catUrl;
   String? categorySelect;
-  List<CategoryList>? categoryList;
+  //List<CategoryList>? categoryList;
   String? categoryType;
 
-  Thumb(
-      {this.imgId,
+  CategoryThumb(
+      {//this.imgId,
         this.tagId,
         this.goodsId,
         this.enName,
@@ -246,47 +356,47 @@ class Thumb {
         this.name,
         this.catUrl,
         this.categorySelect,
-        this.categoryList,
+       // this.categoryList,
         this.categoryType});
 
-  Thumb.fromJson(Map<String, dynamic> json) {
-    imgId = json['imgId'];
+  CategoryThumb.fromJson(Map<String, dynamic> json) {
+    //imgId = json['imgId'].toString();
     tagId = json['tagId'];
-    goodsId = json['goodsId'];
-    enName = json['enName'];
+    goodsId = json['goodsId'].toString();
+    enName = json['enName'].toString();
     isAuto = json['isAuto'];
-    hrefTarget = json['hrefTarget'];
-    hrefType = json['hrefType'];
-    sku = json['sku'];
-    height = json['height'];
-    alt = json['alt'];
-    index = json['index'];
+    hrefTarget = json['hrefTarget'].toString();
+    hrefType = json['hrefType'].toString();
+    sku = json['sku'].toString();
+    height = json['height'].toString();
+    alt = json['alt'].toString();
+    index = json['index'].toString();
     relativeUrl = json['relativeUrl'];
-    target = json['target'];
-    width = json['width'];
+    target = json['target'].toString();
+    width = json['width'].toString();
     isAutoRec = json['isAutoRec'];
-    navNodeId = json['navNodeId'];
+    navNodeId = json['navNodeId'].toString();
     recommendCate = json['recommendCate'];
     isNotIn = json['isNotIn'];
-    adp = json['adp'];
-    firstLevelCompId = json['firstLevelCompId'];
-    cornerMarkImgSrc = json['cornerMarkImgSrc'];
+    adp = json['adp'].toString();
+    firstLevelCompId = json['firstLevelCompId'].toString();
+    cornerMarkImgSrc = json['cornerMarkImgSrc'].toString();
     notInHrefMsg = json['notInHrefMsg'];
     name = json['name'];
     catUrl = json['catUrl'];
-    categorySelect = json['categorySelect'];
-    if (json['categoryList'] != null) {
-      categoryList = <CategoryList>[];
-      json['categoryList'].forEach((v) {
-        categoryList!.add(new CategoryList.fromJson(v));
-      });
-    }
-    categoryType = json['categoryType'];
+    categorySelect = json['categorySelect'].toString();
+    // if (json['categoryList'] != null) {
+    //   categoryList = <CategoryList>[];
+    //   json['categoryList'].forEach((v) {
+    //     categoryList!.add(new CategoryList.fromJson(v));
+    //   });
+    // }
+    categoryType = json['categoryType'].toString();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['imgId'] = this.imgId;
+    //data['imgId'] = this.imgId;
     data['tagId'] = this.tagId;
     data['goodsId'] = this.goodsId;
     data['enName'] = this.enName;
@@ -311,9 +421,9 @@ class Thumb {
     data['name'] = this.name;
     data['catUrl'] = this.catUrl;
     data['categorySelect'] = this.categorySelect;
-    if (this.categoryList != null) {
-      data['categoryList'] = this.categoryList!.map((v) => v.toJson()).toList();
-    }
+    // if (this.categoryList != null) {
+    //   data['categoryList'] = this.categoryList!.map((v) => v.toJson()).toList();
+    // }
     data['categoryType'] = this.categoryType;
     return data;
   }
