@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../Category/views/categoryIndex.dart';
+import '../../Product/views/product_index.dart';
 import 'home_view.dart';
 
 class LandingLayout extends StatefulWidget {
@@ -60,11 +62,11 @@ class _LandingLayoutState extends State<LandingLayout> {
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: PageView(
           controller: controller,
-          children: const [
+          children:  [
             HomeView(),
-            Center(
-              child: Text('page 2'),
-            ),
+
+            CategoryIndex(),
+
             Center(
               child: Text('page 3'),
             ),

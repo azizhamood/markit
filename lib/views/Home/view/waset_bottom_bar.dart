@@ -14,7 +14,7 @@ class _WasetBottomBarState extends State<WasetBottomBar> with SingleTickerProvid
   late TabController _tabController;
   List<Widget> listPage=<Widget>[
     Container(child:Text("Page1"),),
-    Index(),
+    CategoryIndex(),
     Container(child:Text("Page3"),)
 
   ];

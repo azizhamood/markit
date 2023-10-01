@@ -33,3 +33,8 @@ class CategoryChildThumbState extends CategoryState {
   }
 
 }
+
+class NavToProductIndexState extends CategoryState{
+  String? routId ;
+  NavToProductIndexState({this.routId});
+}

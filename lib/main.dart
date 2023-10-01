@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData.dark(),
-      home: Directionality(textDirection: TextDirection.rtl,child: const Home()),
+      home: Directionality(textDirection: TextDirection.rtl,child: const LandingLayout()),
     );
   }
 }

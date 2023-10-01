@@ -8,14 +8,14 @@ import 'package:markit/views/Category/views/category_child.dart';
 import '../repository/categoryRepository.dart';
 import 'Multibloc.dart';
 
-class Index extends StatefulWidget {
-  const Index({Key? key}) : super(key: key);
+class CategoryIndex extends StatefulWidget {
+  const CategoryIndex({Key? key}) : super(key: key);
 
   @override
-  State<Index> createState() => _IndexState();
+  State<CategoryIndex> createState() => _IndexState();
 }
 
-class _IndexState extends State<Index>with TickerProviderStateMixin {
+class _IndexState extends State<CategoryIndex>with TickerProviderStateMixin {
   CategoryBloc categoryBloc=CategoryBloc();
   CategoryBloc categoryBloc2=CategoryBloc();
   CategoryTabLoadingState Data= CategoryTabLoadingState();
@@ -62,6 +62,7 @@ class _CategoryTabsState extends State<CategoryTabs> with TickerProviderStateMix
     return  BlocBuilder<CategoryBloc,CategoryState>(
       buildWhen: (s1,s2){
         if(s2.runtimeType==CategoryTabLoadingState){
+          print("object");
           return true;
         }
         else
@@ -74,6 +75,7 @@ class _CategoryTabsState extends State<CategoryTabs> with TickerProviderStateMix
 
               Data = state as CategoryTabLoadingState;
               _tabController=TabController(length: Data.listTab!.length,initialIndex: 0, vsync: this);
+              categoryBloc.add(CategoryChildrenFetchEvent(Data.listTab?.first.id));
               return DefaultTabController(
                 length: Data.listTab!.length,
                 child: Column(
@@ -83,9 +85,7 @@ class _CategoryTabsState extends State<CategoryTabs> with TickerProviderStateMix
                           onTap: (i){
                             _tabController.index=i;
                             categoryBloc.add(CategoryChildrenFetchEvent(Data.listTab?[i].id));
-                            setState(() {
 
-                            });
                           },
                           tabs: Data.listTab!
                               .map((e) =>Text(e.name!,overflow:TextOverflow.ellipsis ,))
@@ -108,7 +108,7 @@ class _CategoryTabsState extends State<CategoryTabs> with TickerProviderStateMix
 
             }break;
             default:{
-              return CircularProgressIndicator(color: Colors.cyan,);
+              return Center(child: CircularProgressIndicator(color: Colors.cyan,));
             }
 
           }

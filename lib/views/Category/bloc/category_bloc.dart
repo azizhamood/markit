@@ -24,6 +24,8 @@ class CategoryBloc extends Bloc<CategoryEvent,CategoryState>{
     on<CategoryChildrenFetchEvent>(getCategoryChildern);
 
     on<CategoryChildThumbEvent>(notFChildChild);
+
+    on<NavToProductIndexEvent>(navToProductIndex);
   }
 
   @override
@@ -51,5 +53,9 @@ class CategoryBloc extends Bloc<CategoryEvent,CategoryState>{
 
   FutureOr<void> notFChildChild(CategoryChildThumbEvent event, Emitter<CategoryState> emit)async {
      emit(CategoryChildThumbState(childchild: event.childchild));
+  }
+
+  FutureOr<void> navToProductIndex(NavToProductIndexEvent event, Emitter<CategoryState> emit) {
+    emit(NavToProductIndexState(routId: event.routId));
   }
 }

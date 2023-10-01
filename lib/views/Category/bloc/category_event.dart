@@ -18,3 +18,8 @@ class CategoryChildThumbEvent extends CategoryEvent{
    List<ChildChild>? childchild;
    CategoryChildThumbEvent({this.childchild});
 }
+
+class NavToProductIndexEvent extends CategoryEvent{
+  String? routId;
+  NavToProductIndexEvent({this.routId});
+}

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:markit/views/Home/bloc/home_bloc.dart';
 
+import '../../../models/goods.dart';
+import '../../Product/views/product_index.dart';
 import 'category_model.dart';
 import 'item_model.dart';
 import 'items_grid_view_widget.dart';
@@ -13,65 +17,101 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   late Future<List<CategoryModel>> getCategories;
+  HomeBloc homeBloc= HomeBloc();
 
   @override
   void initState() {
     getCategories = _getCategories();
+    homeBloc.add(HomeEventInit());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getCategories,
-      builder: (_, AsyncSnapshot<List<CategoryModel>> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.data != null) {
-          final categories = snapshot.data!;
-          return DefaultTabController(
-            length: categories.length,
-            child: Column(
-              children: [
-                TabBar(
-                  isScrollable: true,
-                  indicatorColor: Colors.white,
-                  indicatorPadding: const EdgeInsets.symmetric(horizontal: 15),
-                  tabs: categories.map((c) => Tab(text: c.name)).toList(),
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: TabBarView(
-                    children:
-                        categories.map((c) => ItemsGridViewWidget(c.items)).toList(),
+    return  BlocProvider<HomeBloc>(
+        create: (context)=>homeBloc,
+        child: BlocBuilder<HomeBloc,HomeState>(
+          bloc: homeBloc,
+          builder: (context,state){
+            switch(state.runtimeType){
+              case HomeGoodState :{
+                HomeGoodState homeGoodState= state as HomeGoodState;
+                List<Good>? goods=homeGoodState.goods;
+
+                return GridView.builder(
+                  itemCount: goods!.length,
+                  padding: const EdgeInsets.all(10),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    mainAxisExtent: 360,
+                    maxCrossAxisExtent: 200,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 1,
                   ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(snapshot.error.toString()),
-                const SizedBox(height: 20),
-                OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      getCategories = _getCategories();
-                    });
-                  },
-                  child: const Text('إعادة المحاولة'),
-                )
-              ],
-            ),
-          );
-        }
-      },
+                  itemBuilder: (_, int index) => ItemWidget((goods[index])!),
+                );
+
+              }
+              default:{
+
+                return Center(child: CircularProgressIndicator(color: Colors.purpleAccent,),);
+              }
+
+            }
+
+          },
+        )
     );
+    // return FutureBuilder(
+    //   future: getCategories,
+    //   builder: (_, AsyncSnapshot<List<CategoryModel>> snapshot) {
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return const Center(
+    //         child: CircularProgressIndicator(),
+    //       );
+    //     } else if (snapshot.data != null) {
+    //       final categories = snapshot.data!;
+    //       return DefaultTabController(
+    //         length: categories.length,
+    //         child: Column(
+    //           children: [
+    //             TabBar(
+    //               isScrollable: true,
+    //               indicatorColor: Colors.white,
+    //               indicatorPadding: const EdgeInsets.symmetric(horizontal: 15),
+    //               tabs: categories.map((c) => Tab(text: c.name)).toList(),
+    //             ),
+    //             const SizedBox(height: 10),
+    //             Expanded(
+    //               child: TabBarView(
+    //                 children:
+    //                     categories.map((c) => ItemsGridViewWidget(c.items)).toList(),
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //       );
+    //     } else {
+    //       return Center(
+    //         child: Column(
+    //           mainAxisSize: MainAxisSize.min,
+    //           children: [
+    //             Text(snapshot.error.toString()),
+    //             const SizedBox(height: 20),
+    //             OutlinedButton(
+    //               onPressed: () {
+    //                 setState(() {
+    //                   getCategories = _getCategories();
+    //                 });
+    //               },
+    //               child: const Text('إعادة المحاولة'),
+    //             )
+    //           ],
+    //         ),
+    //       );
+    //     }
+    //   },
+    // );
   }
 
   Future<List<CategoryModel>> _getCategories() async {
