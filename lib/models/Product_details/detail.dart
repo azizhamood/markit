@@ -2,8 +2,6 @@
 //
 //     final detail = detailFromJson(jsonString);
 
-import 'dart:convert';
-
 
 class Detail {
   SizeTemplate? sizeTemplate;
